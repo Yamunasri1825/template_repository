@@ -1,17 +1,17 @@
-import { Pool } from 'pg';
-
-// Configure PostgreSQL connection
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+import { Client } from 'pg';
 
 export default async function handler(req, res) {
-  try {
-    // Query the current time from the database
-    const result = await pool.query('SELECT NOW()');
-    res.status(200).json({ message: 'Connected to PostgreSQL!', time: result.rows[0].now });
-  } catch (error) {
-    console.error('Error connecting to PostgreSQL:', error);
-    res.status(500).json({ error: 'Database connection failed' });
-  }
+  const client = new Client({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'mydb',
+    password: 'newpassword',
+    port: 5432,
+  });
+
+  await client.connect();
+  const result = await client.query('SELECT NOW()');
+  await client.end();
+
+  res.status(200).json({ time: result.rows[0].now });
 }
