@@ -1,0 +1,23 @@
+{
+    "name": "Next.js with PostgreSQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspace",
+    "postCreateCommand": "npm install",
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash"
+        },
+        "extensions": [
+          "dbaeumer.vscode-eslint", // Optional: ESLint extension
+          "esbenp.prettier-vscode" // Optional: Prettier extension
+        ]
+      }
+    },
+    "forwardPorts": [3000],
+    "remoteEnv": {
+      "DATABASE_URL": "postgres://root:newpassword@db:5432/devdb"
+    }
+  }
+  
