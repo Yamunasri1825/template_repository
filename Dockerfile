@@ -8,7 +8,7 @@ RUN apt-get update && \
 # Set up PostgreSQL
 USER postgres
 RUN /etc/init.d/postgresql start && \
-    psql --command "CREATE USER postgres WITH SUPERUSER PASSWORD 'newpassword';" && \
+    psql --command "DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'postgres') THEN CREATE ROLE postgres WITH SUPERUSER PASSWORD 'newpassword'; END IF; END $$;" && \
     createdb -O myuser mydb
 
 # Switch back to the default user
