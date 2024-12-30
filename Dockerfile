@@ -1,20 +1,24 @@
-FROM node:16
+# Use a Node.js base image
+FROM node:18
 
-# Install PostgreSQL CLI
-RUN apt-get update && apt-get install -y postgresql-client
+# Install PostgreSQL
+RUN apt-get update && \
+    apt-get install -y postgresql postgresql-contrib
 
-# Set working directory
+# Set up PostgreSQL
+USER postgres
+RUN /etc/init.d/postgresql start && \
+    psql --command "CREATE USER postgres WITH SUPERUSER PASSWORD 'newpassword';" && \
+    createdb -O myuser mydb
+
+# Switch back to the default user
+USER node
+
+# Set the working directory
 WORKDIR /workspace
 
-# Copy package.json and install dependencies
-COPY package*.json ./
-RUN npm install
-
-# Copy app code
+# Copy the Next.js app code
 COPY . .
 
-# Expose app port
-EXPOSE 3000
-
-# Default command to start the app
-CMD ["npm", "run", "dev"]
+# Install dependencies
+RUN npm install
