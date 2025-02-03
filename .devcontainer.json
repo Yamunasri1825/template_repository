@@ -3,7 +3,7 @@
   "build": {
     "dockerfile": "Dockerfile"
   },
-  "forwardPorts": [3000],
+  "forwardPorts": [3000, 5432],
   "postCreateCommand": "npm install && npm run dev",
   "customizations": {
     "vscode": {
@@ -12,5 +12,21 @@
         "esbenp.prettier-vscode"
       ]
     }
-  }
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {},
+    "ghcr.io/devcontainers/features/postgres:1": {
+      "version": "15",
+      "database": "mydb",
+      "user": "postgres",
+      "password": "newpassword"
+    }
+  },
+  "mounts": [
+    {
+      "source": "/workspaces/postgres-data",
+      "target": "/var/lib/postgresql/data",
+      "type": "bind"
+    }
+  ]
 }
